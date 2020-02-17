@@ -1,0 +1,8 @@
+*, *::before, *::after {margin:0; padding:0; box-sizing:border-box;}
+html, body {height:100%;}
+body {font-size:12px; line-height:140%; font-family:'Dotum', sans-serif;}
+
+table {width:100%; border-collapse:collapse;}
+td {cursor:pointer; width:100px; height:100px; border:1px solid #000; text-align:center; vertical-align:middle; font-size:20px;}
+
+#ticTacToe {width:300px; height:300px;}
