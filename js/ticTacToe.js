@@ -1,109 +1,86 @@
-// 비겼을 때 
-
 var wrapper = document.querySelector('#ticTacToe');
 var table = document.createElement('table');
+var outline = 3;
 
-var rowArray = [];  // 줄들 
-var dataArray = []; // 칸들 
+var row_array = [];       
+var data_array = [];
 
-var lineBoolean = false;
+var count = 0;
+var td_length = 9;
 
-var turn = 'X'; // 초기 시작 값 X 
-var count = 1;
+var turn = 'X';  // 초기 시작 값 X
+var lineSuccess = false;
 
-function dataBoxChecked() {
-
-    var allTd = document.querySelectorAll('td');
-    
-    console.log(allTd);
-
-    for(var i = 0; i < allTd.length; i++) {
-        if(allTd[i].hasAttribute('box-clicked')) {
-            console.log(allTd[i].hasAttribute('box-clicked'));
-        }
-    }
-
-    
-
-    // dataArray.forEach(function(row) {
-    //     row.forEach(function(data) {
-
-    //         var allTd = data.hasAttribute('box-clicked');
-            
-    //         // if(data.hasAttribute('box-clicked') === true > data.length) {
-    //         //     console.log('게임이 비겼습니다.');
-    //         // } else {
-
-    //         // }
-
-    //     })
-    // });
-
-    
+function reset() {
+    lineSuccess = false;
+    count = 0;
+    data_array.forEach(function(data) {
+        data.forEach(function(td) {
+            td.textContent = '';
+        })
+    })
 }
 
-function result(turn) {
-    alert(`${turn} 님이 승리!`);
-    lineBoolean = false;
+function draw() {
+    setTimeout(function() {
+        alert('무승부입니다');
+        reset();
+    }, 200);
+}
+
+function winner(turn) {
+    lineSuccess = true;
+    setTimeout(function() {
+        alert(`${turn}님이 승리!`);
+        reset();
+    }, 200);
 }
 
 function dataClick(event) {
-    var row  = rowArray.indexOf(event.target.parentNode);   //몇줄 
-    var data = dataArray[row].indexOf(event.target);        //몇칸
-    console.log(`몇줄: ${row}, 몇칸: ${data}`);
+    var row = row_array.indexOf(event.target.parentNode);   // tr : 0, 1, 2
+    var data = data_array[row].indexOf(event.target); // td : 0, 1, 2
+    console.log(`TR : ${row} , TD : ${data}`);
 
-    // 클릭 했을 때 값이 비어 있으면, 값을 넣음 
-    if(dataArray[row][data].textContent === '') {
-        dataArray[row][data].textContent = turn;
-        dataArray[row][data].setAttribute('box-clicked', 'Y');
+    // 클릭 했을 때 값이 비어 있으면 값을 넣음 
+    if(data_array[row][data].textContent === '') {
+        data_array[row][data].textContent = turn;
+        count++;
 
-        if(dataArray[row][0].textContent === turn && dataArray[row][1].textContent === turn && dataArray[row][2].textContent === turn) {
+        if(data_array[row][0].textContent === turn && data_array[row][1].textContent === turn && data_array[row][2].textContent === turn) {
             // 가로 
-            lineBoolean = true;
-        } else if(dataArray[0][data].textContent === turn && dataArray[1][data].textContent === turn && dataArray[2][data].textContent === turn) {
+            winner(turn);
+        } else if(data_array[0][data].textContent === turn && data_array[1][data].textContent === turn && data_array[2][data].textContent === turn) {
             // 세로 
-            lineBoolean = true;
-        } else if(dataArray[0][0].textContent === turn && dataArray[1][1].textContent === turn && dataArray[2][2].textContent === turn) {
+            winner(turn);
+        } else if(data_array[0][0].textContent === turn && data_array[1][1].textContent === turn && data_array[2][2].textContent === turn) {
             // 대각선 
-            lineBoolean = true;
-        } else if(dataArray[0][2].textContent === turn && dataArray[1][1].textContent === turn && dataArray[2][0].textContent === turn) {
+            winner(turn);
+        } else if(data_array[0][2].textContent === turn && data_array[1][1].textContent === turn && data_array[2][0].textContent === turn) {
             // 대각선 
-            lineBoolean = true;
+            winner(turn);
+        } else if(count === td_length) {
+            draw();
         };
 
-        dataBoxChecked();
-
-        if(lineBoolean) {
-            setTimeout(function() {
-                result(turn);
-                dataArray.forEach(function(row) {
-                    row.forEach(function(data) {
-                        data.textContent = '';
-                    })
-                });
-            }, 200);
+        if(turn === 'X') {
+            turn = 'O';
         } else {
-            if(turn === 'X') {
-                turn = 'O';
-            } else {
-                turn = 'X';
-            };
-        }
-
+            turn = 'X';
+        };
+        
     } else {
-        alert('이미 클릭 했습니다.');
-    }
-    
+        console.log('이미 선택되었습니다.');
+    };
 }
 
 function init() {
-    for(var i = 0; i < 3; i++) {
+    for(var i = 0; i < outline; i++) {
         var tr = document.createElement('tr');
-        rowArray.push(tr);
-        dataArray.push([]);
-        for(var j = 0; j < 3; j++) {
+        row_array.push(tr);
+        data_array.push([]);
+        for(var j = 0; j < outline; j++) {
             var td = document.createElement('td');
-            dataArray[i].push(td);;
+            data_array[i].push(td);
             td.addEventListener('click', dataClick);
             tr.appendChild(td);
         }
